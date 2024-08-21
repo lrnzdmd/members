@@ -3,14 +3,25 @@ const bcrypt = require('bcryptjs');
 const path = require('node:path')
 const express = require('express');
 const session = require('express-session');
+const pgSession = require('connect-pg-simple')(session);
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 const app = express();
-app.set('views', path.join(__dirname, "views"));
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.use(express.static('public'));
 
-app.use(session({ secret: 'cats', resave: false, saveUninitialized: false }));
+app.use(session({
+    store: new pgSession({
+    pool : pool
+  }),
+  secret: process.env.COOKIE_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }
+}));
+
 app.use(passport.session());
 app.use(express.urlencoded({extended: false}));
 
@@ -92,10 +103,16 @@ app.post('/sign-up', (req, res, next) => {
     try {
         bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
             if (err) {
-                return done(err);
+                return next(err);
             }
-            await pool.query("INSERT INTO users (username, password) VALUES ($1,$2);",[req.body.username, hashedPassword]);
+            try {
+                await pool.query("INSERT INTO users (username, password) VALUES ($1,$2);",[req.body.username, hashedPassword]);
             res.redirect('/');
+            } catch (error) {
+                return next(error);
+            }
+
+            
         })
     } catch (error) {
         return next(error);
