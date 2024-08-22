@@ -4,15 +4,20 @@
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>incognito</title><path fill="#e5e7eb" d="M17.06 13C15.2 13 13.64 14.33 13.24 16.1C12.29 15.69 11.42 15.8 10.76 16.09C10.35 14.31 8.79 13 6.94 13C4.77 13 3 14.79 3 17C3 19.21 4.77 21 6.94 21C9 21 10.68 19.38 10.84 17.32C11.18 17.08 12.07 16.63 13.16 17.34C13.34 19.39 15 21 17.06 21C19.23 21 21 19.21 21 17C21 14.79 19.23 13 17.06 13M6.94 19.86C5.38 19.86 4.13 18.58 4.13 17S5.39 14.14 6.94 14.14C8.5 14.14 9.75 15.42 9.75 17S8.5 19.86 6.94 19.86M17.06 19.86C15.5 19.86 14.25 18.58 14.25 17S15.5 14.14 17.06 14.14C18.62 14.14 19.88 15.42 19.88 17S18.61 19.86 17.06 19.86M22 10.5H2V12H22V10.5M15.53 2.63C15.31 2.14 14.75 1.88 14.22 2.05L12 2.79L9.77 2.05L9.72 2.04C9.19 1.89 8.63 2.17 8.43 2.68L6 9H18L15.56 2.68L15.53 2.63Z" /></svg>
     </a>
     <h1 class="text-3xl font-bold">SecretClub</h1>
+    <% if (currentUser && currentUser.memberstatus === "User") { %>
+        <a href="/youarewelcometojointhesecretclub">
+            <svg class="ml-4 w-6 text-emerald-700 dark:text-emerald-600 hover:text-slate-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>key-alert-outline</title><path fill="currentColor" d="M16 22H12V24H6V13.32C3.58 12.17 2 9.72 2 7C2 3.14 5.14 0 9 0C12.86 0 16 3.14 16 7C16 9.72 14.42 12.18 12 13.32V16H16V22M14 18H10V11.94L10.67 11.71C12.66 11 14 9.11 14 7C14 4.24 11.76 2 9 2S4 4.24 4 7C4 9.11 5.34 11 7.33 11.71L8 11.94V22H10V20H14V18M12 7C12 8.66 10.66 10 9 10S6 8.66 6 7 7.34 4 9 4 12 5.34 12 7M9 8C9.55 8 10 7.55 10 7S9.55 6 9 6 8 6.45 8 7 8.45 8 9 8M20 7H22V13H20M20 17H22V15H20" /></svg>
+        </a>
+        <% } %>
 </div>
 <% if (!currentUser) {%>
 <div class="flex gap-2 h-full font-semibold items-center mr-4">
-    <a class="bg-teal-600 dark:bg-teal-700 p-2 rounded-md shadow-gray-950 shadow-sm" href="/log-in">Log-in</a>
-    <a class="bg-teal-600 dark:bg-teal-700 p-2 rounded-md shadow-gray-950 shadow-sm" href="/sign-up">Register</a>
+    <a class="p-2 font-medium tracking-wide capitalize transition-colors duration-300 transform bg-teal-600 dark:bg-teal-700 shadow-gray-950 rounded-lg hover:bg-teal-500 focus:outline-none focus:ring focus:ring-teal-300 focus:ring-opacity-50" href="/log-in">Log-in</a>
+    <a class="p-2 font-medium tracking-wide capitalize transition-colors duration-300 transform bg-teal-600 dark:bg-teal-700 rounded-lg hover:bg-teal-500 focus:outline-none focus:ring focus:ring-teal-300 focus:ring-opacity-50" href="/sign-up">Register</a>
 </div>
 <% } else { %>
-    <h1 class="text-3xl font-bold self-center -translate-x-6">Hello, <%= currentUser.fullname %>!</h1>
-    <a class="bg-teal-600 dark:bg-teal-700 shadow-gray-950 p-2 mr-4 rounded-md shadow-sm" href="/log-out">Logout</a>       
+    <h1 class="text-3xl font-bold self-center -translate-x-20">Hello, <%= currentUser.fullname %>!</h1>
+    <a class="font-medium tracking-wide capitalize transition-colors duration-300 transform bg-teal-600 dark:bg-teal-700 shadow-gray-950 rounded-lg hover:bg-teal-500 focus:outline-none focus:ring focus:ring-teal-300 focus:ring-opacity-50 p-2 mr-4" href="/log-out">Logout</a>       
 
 <% } %>
 </header>

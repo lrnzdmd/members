@@ -133,6 +133,47 @@ app.post('/new-message', async (req, res) => {
     }
 })
 
+app.get('/delete/message', async (req, res) => {
+    if (req.user && req.user.memberstatus === 'Admin') {
+        await queries.deleteMessage(req.query.msgid);
+        res.redirect('/');
+    } else {
+        res.redirect('*');
+    }
+})
+
+app.get('/edit/message', async (req, res) => {
+    if (req.user && req.user.memberstatus === 'Admin') {
+        const message = await queries.getMessageById(req.query.msgid);
+        res.render('editMsg', {message: message});
+    } else {
+        res.redirect('*');
+    }
+})
+
+app.post('/edit/message', async (req, res) => {
+    if (req.user && req.user.memberstatus === 'Admin') {
+        await queries.editMessage(req.body.id, req.body.title, req.body.message);
+        res.redirect('/');
+    } else {
+        res.redirect('*');
+    }
+})
+
+app.get('/youarewelcometojointhesecretclub', async (req,res) => {
+    if (req.user.memberstatus === 'User') {
+        await queries.userUpgrade(req.user.id);
+        res.redirect('/');
+    } else {
+        res.redirect('*');
+    }
+})
+
+
+app.get('*', (req, res) => {
+    res.render('404');
+})
+
 
 
 app.listen(3000, () => console.log('Server listening on port 3000'));
