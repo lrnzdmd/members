@@ -1,7 +1,12 @@
 const pool = require('./pool.js');
 
 async function newUser(username, fullname, password) {
-    await pool.query("INSERT INTO users (username, fullname, password, memberstatus) VALUES ($1,$2,$3,'User');",[username, fullname, password]);
+    try {
+        await pool.query("INSERT INTO users (username, fullname, password, memberstatus) VALUES ($1,$2,$3,'User');",[username, fullname, password]);
+    } catch (error) {
+        console.error(error);
+    }
+    
 }
 
 async function newMessage(title, authorid, message) {
