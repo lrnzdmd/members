@@ -1,4 +1,5 @@
 const pool = require('./db/pool');
+const queries = require('./db/queries')
 const bcrypt = require('bcryptjs');
 const path = require('node:path')
 const express = require('express');
@@ -77,7 +78,10 @@ app.use((req,res,next) => {
 
 // ----------Views Render--------------
 
-app.get('/', (req, res) => res.render('index'));
+app.get('/', async (req, res) => {
+    const messages = await queries.getAllMessages();
+    res.render('index', {messages:messages});
+});
 
 app.get('/log-in', (req, res) => res.render('log-in'));
 
@@ -99,14 +103,14 @@ app.get('/log-out', (req,res) => {
 
 app.get('/sign-up', (req, res) => res.render('sign-up'));
 
-app.post('/sign-up', (req, res, next) => {
+app.post('/sign-up', async (req, res, next) => {
     try {
         bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
             if (err) {
                 return next(err);
             }
             try {
-                await pool.query("INSERT INTO users (username, password) VALUES ($1,$2);",[req.body.username, hashedPassword]);
+                await queries.newUser(req.body.username, req.body.fullname, hashedPassword);
             res.redirect('/');
             } catch (error) {
                 return next(error);
@@ -114,6 +118,16 @@ app.post('/sign-up', (req, res, next) => {
 
             
         })
+    } catch (error) {
+        return next(error);
+    }
+})
+
+app.post('/new-message', async (req, res) => {
+    
+    try {
+       await queries.newMessage(req.body.title, req.user.id, req.body.message);
+       res.redirect('/');
     } catch (error) {
         return next(error);
     }
